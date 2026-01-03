@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>PATЯIOT</title>
+  <title>PATЯIOT(パトリオット)</title>
 
   <style>
     body {
@@ -12,12 +12,69 @@
       color: #fff;
     }
 
-    header {
+    /* ===== ロゴ フェード演出 ===== */
+    .logo-overlay {
+      position: fixed;
+      inset: 0;
       background: #000;
-      padding: 20px;
-      text-align: center;
-      font-size: 2em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      animation: logoFadeOut 2.5s ease forwards;
+    }
+
+    .logo-overlay img {
+      width: 220px;
+      max-width: 60%;
+    }
+
+    @keyframes logoFadeOut {
+      0% {
+        opacity: 1;
+        transform: scale(1);
+      }
+      60% {
+        opacity: 1;
+        transform: scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(0.9);
+        pointer-events: none;
+      }
+    }
+
+    /* ===== HEADER（左上ロゴ） ===== */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+
+      display: flex;
+      align-items: center;
+      gap: 14px;
+
+      padding: 14px 20px;
+      background: rgba(0, 0, 0, 0.9);
+      backdrop-filter: blur(6px);
+    }
+
+    .site-logo {
+      height: 42px;
+      width: auto;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    .site-logo:hover {
+      transform: scale(1.05);
+      opacity: 0.9;
+    }
+
+    .site-title {
+      font-size: 0.9em;
       letter-spacing: 2px;
+      opacity: 0.7;
     }
 
     /* ===== SNS ===== */
@@ -49,7 +106,6 @@
       background: #222;
     }
 
-    /* YouTubeだけ中身を少し大きく */
     .sns-item.youtube img {
       width: 26px;
       height: 26px;
@@ -107,12 +163,21 @@
 
 <body>
 
-<header>
-  PATЯIOT Official Site
+<!-- フェード用ロゴ -->
+<div class="logo-overlay">
+  <img src="logo_W.png" alt="PATЯIOT Logo">
+</div>
+
+<!-- ヘッダー -->
+<header class="site-header">
+  <img src="logo_W.png" alt="PATЯIOT Logo" class="site-logo">
+  <div class="site-title">PATЯIOT Official Site</div>
 </header>
 
+<!-- SNS -->
 <nav class="sns">
   <h2>各種SNS</h2>
+
   <a href="https://x.com/patriot_oita" target="_blank" class="sns-item">
     <img src="x_logo_W.png" alt="X">
   </a>
