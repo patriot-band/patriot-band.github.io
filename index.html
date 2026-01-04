@@ -160,6 +160,92 @@
       border-top: 1px solid #444;
       margin-top: 40px;
     }
+
+    /* ============================================================
+       ここから追加：Lyrics（曲名クリックで＋/ー＆歌詞ぬるっと）
+       ============================================================ */
+
+    :root{
+      --ly-border: rgba(255,255,255,.25);
+      --ly-muted: rgba(255,255,255,.72);
+      --ly-ease: cubic-bezier(.16,1,.3,1);
+      --ly-dur: 520ms;
+    }
+
+    .ly-wrap{
+      width: 100%;
+      max-width: 800px;
+    }
+
+    .ly-song{
+      border-top: 1px solid var(--ly-border);
+      padding: 16px 0;
+    }
+    .ly-song:last-child{
+      border-bottom: 1px solid var(--ly-border);
+    }
+
+    .ly-head{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      cursor:pointer;
+      user-select:none;
+    }
+
+    .ly-name{
+      font-size:22px;
+      line-height:1.2;
+      white-space:nowrap;
+    }
+
+    /* ＋／ー */
+    .ly-toggle{
+      width:1em;
+      text-align:center;
+      font-size:20px;
+      opacity:0;
+      transform:translateX(-6px);
+      transition: opacity .25s ease, transform .25s ease;
+    }
+    .ly-toggle::after{ content:"＋"; }
+
+    .ly-song:hover .ly-toggle,
+    .ly-song.is-open .ly-toggle{
+      opacity:1;
+      transform:translateX(0);
+    }
+    .ly-song.is-open .ly-toggle::after{ content:"ー"; }
+
+    /* 歌詞アニメ領域 */
+    .ly-panel{
+      height:0;
+      overflow:hidden;
+      transition: height var(--ly-dur) var(--ly-ease);
+      will-change: height;
+    }
+
+    .ly-lyrics{
+      margin-top:10px;
+      color:var(--ly-muted);
+      font-size:14px;
+      line-height:1.9;
+      white-space:pre-wrap;
+
+      opacity:0;
+      transform: translateY(-6px);
+      filter: blur(2px);
+      transition:
+        opacity 260ms ease,
+        transform var(--ly-dur) var(--ly-ease),
+        filter var(--ly-dur) ease;
+    }
+
+    .ly-song.is-open .ly-lyrics{
+      opacity:1;
+      transform: translateY(0);
+      filter: blur(0);
+    }
   </style>
 </head>
 
@@ -212,11 +298,479 @@
 
   </section>
 
+  <!-- ============================================================
+       追加セクション：Lyrics（ここに曲を並べる）
+       ============================================================ -->
+  <section class="lyrics">
+    <h2>Lyrics</h2>
+
+    <div class="ly-wrap">
+
+      <!-- ===== 曲 1 ===== -->
+      <section class="ly-song">
+        <div class="ly-head" role="button" tabindex="0" aria-expanded="false">
+          <div class="ly-name">金魚は水槽の中</div>
+          <div class="ly-toggle" aria-hidden="true"></div>
+        </div>
+
+        <div class="ly-panel" aria-hidden="true">
+          <div class="ly-lyrics">
+            <!-- ▼▼▼ ここに「この曲の歌詞」を埋め込み▼▼▼ -->
+昨日迄止んでた雨に気が付いて
+溺れた果てにはあなたに似た声
+瞳にも写真にも笑顔だけが映り
+水の流れがただ消えないように
+
+昨日迄止んでた風に気が付いて
+短くなった髪を吹いては撫でて
+金魚は荒れ狂うひどい波の中で
+私の想いの中を描きゆくように
+
+勘違いすれ違いこの先もきっと
+
+誰にも知られずただ息している
+私あなたの海を泳ぎ続けている
+今夜また一人で飛沫をあげずに
+優しくて静かなねむりに堕ちる
+
+どうして知らず知らずのうちに
+綺麗な涙が出てくるのでしょう
+知って欲しいのはあなただけで
+そばにいて良いのもあなただけ
+
+誰にも知られずただ恋している
+私あなたと海にて泳ぎ続けたい
+水面が透けれど一途が邪魔して
+淀みに溶けるのはケムリの世界
+
+勘違いすれ違いこの先もずっと
+
+誰にも知られずただ泣いている
+
+誰にも知られずただ愛している
+私あなたの海を潜り続けている
+電話が鳴らずとも震えたままで
+流されてもなお声が聞きたくて
+今夜もまた金魚はあなたの中に
+溺れて呼吸を乱された水槽の中
+            <!-- ▲▲▲ ここまでが1曲分の歌詞 ▲▲▲ -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== 曲 2 ===== -->
+      <section class="ly-song">
+        <div class="ly-head" role="button" tabindex="0" aria-expanded="false">
+          <div class="ly-name">Wonderland</div>
+          <div class="ly-toggle" aria-hidden="true"></div>
+        </div>
+
+        <div class="ly-panel" aria-hidden="true">
+          <div class="ly-lyrics">
+            <!-- ▼▼▼ 歌詞を埋め込み（改行OK） ▼▼▼ -->
+オレンジ色の陽射し浴びて
+眼の色を変えて何を思う
+悔し涙流して何を見た
+全てはこの日のため
+これからの行く手を遮る
+雑音躱して Jump
+ワンダーランドは止まらない
+まだ何も始まってない
+サーチライトが突き刺して
+僕は誰にでも成れる
+
+夕闇を追いかけて雨を背に受けて
+星に願ったのも
+眠りに飽きるほど話したのも
+全てはこの日のため
+昔から周りに蔓延る
+噂を蹴り上げ Shout
+ワンダーランドは止まらない
+まだ何も変わってない
+テールランプを掻き消して
+僕はどんな色にも染まる
+ワンダーランドは止まらない
+まだ何も得ていない
+真っ直ぐに手を伸ばして
+声が枯れてもなお叫ぶ
+ワンダーランドは終わらない
+その目は濁らない
+静寂を貫いて
+ここから僕らの番だ
+            <!-- ▲▲▲ ここまで ▲▲▲ -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== 曲 3 ===== -->
+      <section class="ly-song">
+        <div class="ly-head" role="button" tabindex="0" aria-expanded="false">
+          <div class="ly-name">Hunter</div>
+          <div class="ly-toggle" aria-hidden="true"></div>
+        </div>
+
+        <div class="ly-panel" aria-hidden="true">
+          <div class="ly-lyrics">
+            <!-- ▼▼▼ ここに「この曲の歌詞」を埋め込み▼▼▼ -->
+何を考えているの
+言われ慣れ聞き飽きた
+彷徨う独りぼっちは今日も
+声を荒げたがる
+
+いつもの事ねと
+苦笑いし続けて
+消えるように逃げる
+なぜあなたはいつも目を逸らすの
+
+別に嫌われたいわけじゃなくて
+私がちょっと変わっているだけ
+ブレない視線はあなたに向き続ける
+月の見えない夜でも
+妖しく光って
+
+静かな街にもやっと
+暮らし慣れ住み飽きた
+ここで独りぼっちは今日も
+群衆達を羨む
+
+いつもの事かと
+嘲笑ってやりたいのに
+まだ力がない
+なぜあなたは遠くで見つめんの
+
+別に共感が欲しいわけじゃなくて
+色んな人と出会いたいだけ
+期待の視線が私に向き続ける
+先の見えない今でも
+
+今日も私はあなたを探す
+出会ってくれるあなたを探す
+音を聞いてくれるあなたを探す
+暗闇の中目を光らせるHunter
+
+別に嫌われたいわけじゃなくて
+逆に嫌わないで欲しいだけ
+ブレない視線はあなたに向き続ける
+ステージの上の私から
+悦に浸るため見せつけたいと思う
+私がちょっと変わっているだけ
+あなたと目を合わせた時初めて
+強いシンパを感じたいから
+幻想を止めない
+            <!-- ▲▲ 歌詞 ▲▲▲ -->
+          </div>
+        </div>
+      </section>
+      <!-- ===== 曲 4 ===== -->
+      <section class="ly-song">
+        <div class="ly-head" role="button" tabindex="0" aria-expanded="false">
+          <div class="ly-name">Supernova</div>
+          <div class="ly-toggle" aria-hidden="true"></div>
+        </div>
+
+        <div class="ly-panel" aria-hidden="true">
+          <div class="ly-lyrics">
+            <!-- ▼▼▼ ここに「この曲の歌詞」を埋め込み▼▼▼ -->
+あの人はこの歌でどう思うのだろうか
+前を向き息を合わせせーので走り出す
+雷に撃たれても傷を隠そうとはせずに
+どんな逆境も突っ跳ね返す吹けや雨嵐
+
+美しい花のように枯れず大輪咲かせて
+雄々しい鳥のように羽を空に広げ翔ぶ
+生まれ変わる魔物を誰も止められない
+
+酸いも甘いも噛み締めた者に敵はない
+周りを見れば拳あげる味方がいるだけ
+斜陽目を焼けどスピードは落とさずに
+流行りの色を塗り変えていく轟け雨嵐
+
+凛々しい風のように濡れた頬乾かして
+麗しい月のように翳りを見せずに輝く
+踊り歌うこの世界を誰も止められない
+
+誰かの声こだましてゆく止められない
+我らの声こだましてゆく止められない
+貴方の声こだましてゆく止められない
+歓喜の声こだましてゆく止められない
+
+新しい星のようにここから動き出して
+眩しい光のように闇を燦々と照らして
+鳴り響く開幕の合図誰も止められない
+            <!-- ▲▲ 歌詞 ▲▲▲ -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== 曲 5 ===== -->
+      <section class="ly-song">
+        <div class="ly-head" role="button" tabindex="0" aria-expanded="false">
+          <div class="ly-name">123</div>
+          <div class="ly-toggle" aria-hidden="true"></div>
+        </div>
+
+        <div class="ly-panel" aria-hidden="true">
+          <div class="ly-lyrics">
+            <!-- ▼▼▼ ここに「この曲の歌詞」を埋め込み▼▼▼ -->
+ワン・ツー・スリーで解けるような
+そんなに簡単な問題じゃないんだぜ
+ちょっとだけ回り道をしたとしても
+いいのかいいいんじゃないいいのさ
+
+無人の駅にて列車を待っていたこと
+飛び乗って窮屈に揺られていたこと
+あの改札前あなたがいなかったこと
+それを残念がりブルーになったこと
+
+何か足りない思い出はみすぼらしく
+今日もまた探し回る時間がまだある
+
+偶然隣に座ってきた見知らぬ人さえ
+何かを考えて暮らしているのだろう
+
+ワン・ツー・スリーで恋するような
+そんなシンプルな青春はないんだぜ
+ちょっとだけこの命を懸けてみても
+いいのかいいいんじゃないいいのさ
+
+何かが足りない思い出も翳り始める
+今日は既に探し回る時間がもうない
+
+いっせーのーでその身を投げ打って
+終われるような人生じゃないんだぜ
+身体中に青を満たしていけばいいさ
+全て全て行けんのかい出来んのかい
+
+ワン・ツー・スリーで次のどこかへ
+ワンダーランドは終わらないんだぜ
+ちょっとだけ回り道をしたとしても
+いいのかいいいんじゃないいいのさ
+            <!-- ▲▲ 歌詞 ▲▲▲ -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== 曲 6 ===== -->
+      <section class="ly-song">
+        <div class="ly-head" role="button" tabindex="0" aria-expanded="false">
+          <div class="ly-name">YOROI</div>
+          <div class="ly-toggle" aria-hidden="true"></div>
+        </div>
+
+        <div class="ly-panel" aria-hidden="true">
+          <div class="ly-lyrics">
+            <!-- ▼▼▼ ここに「この曲の歌詞」を埋め込み▼▼▼ -->
+何でもできるような気がした遠い春
+一体どこで道を踏み外したのだろう
+何にも怯むものはなかった赤い夕陽
+その日から心の中の何かが変わった
+
+化けの皮を被った鎧を纏うこの身に
+剣を刺す者など誰一人としていない
+
+あの角を曲がればそこは行き止まり
+染まった素手を引き摺られて終わり
+叶わないうつつを夢見ているばかり
+余所見をしていたらすぐ泥濘に嵌り
+
+縋る気は全くないというのに今更さ
+
+恩恵を着飾った呪いを孕むこの手を
+握り返す者など誰一人としていない
+
+どんなに足掻いても答えは出ている
+
+栄光を失った憂いに満ちたこの眼に
+癒しを与える者はどこの誰か教えて
+化けの皮を被った鎧を纏うこの身を
+強く抱く者など誰一人としていない
+己を抱きしめるそんな者などいない
+            <!-- ▲▲ 歌詞 ▲▲▲ -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== 曲 7 ===== -->
+      <section class="ly-song">
+        <div class="ly-head" role="button" tabindex="0" aria-expanded="false">
+          <div class="ly-name">秒針と満月と鏡</div>
+          <div class="ly-toggle" aria-hidden="true"></div>
+        </div>
+
+        <div class="ly-panel" aria-hidden="true">
+          <div class="ly-lyrics">
+            <!-- ▼▼▼ ここに「この曲の歌詞」を埋め込み▼▼▼ -->
+昨日言っていた言葉は嘘なの
+僕を眺めるのはお空の白い月
+うずくまった横顔を見ている
+
+あなたが笑っていた夜でした
+僕の思い上がりが邪魔をして
+スピードが一人早かったから
+時計の秒針はまだ重ならない
+
+明日は遠く知らぬ街へ行こう
+
+あなたが黙っていた朝でした
+要らない優しさが邪魔をして
+まるで二人が鏡に映ったまま
+あなたのことをまだ知らない
+
+自分を貶しながら他人を妬む
+夢を見過ぎた僕の負けですね
+
+明るくて暗すぎる日々でした
+ただ出会い別れが邪魔をして
+哀しい思いは一人歩き続ける
+思い出せない程の時間でした
+二人はいつまでも凍えている
+忘れられない程の瞬間でした
+外は雨が降っていたみたいね
+
+この前言った言葉は本当なの
+            <!-- ▲▲ 歌詞 ▲▲▲ -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== 曲 8 ===== -->
+      <section class="ly-song">
+        <div class="ly-head" role="button" tabindex="0" aria-expanded="false">
+          <div class="ly-name">HERO ON STAGE</div>
+          <div class="ly-toggle" aria-hidden="true"></div>
+        </div>
+
+        <div class="ly-panel" aria-hidden="true">
+          <div class="ly-lyrics">
+            <!-- ▼▼▼ ここに「この曲の歌詞」を埋め込み▼▼▼ -->
+ヒーローが歌う姿を遠く見つめたあの日
+あなた以外誰しもが見向きもしなかった
+思い出は光に照らされなぜか悔しくなる
+
+今日は雨に濡れるから傘をさして帰ろう
+いつか目覚めた衝動をずっと忘れないで
+Hurrah, hurrah, you’re alright.
+
+僕が僕で居られる場所聞こえた歓声の渦
+
+今日は涙を見せないで傘をさして帰ろう
+心を揺さぶった感動をずっと忘れないで
+Hurrah,hurrah, you’re alright.
+
+今日は全て曝け出して傘もささず帰ろう
+舞台から眺める風景をずっと忘れないで
+人が人で居られる時間止まない歓声の渦
+Hurrah, hurrah, you’re alright.
+            <!-- ▲▲ 歌詞 ▲▲▲ -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== 曲 9 ===== -->
+      <section class="ly-song">
+        <div class="ly-head" role="button" tabindex="0" aria-expanded="false">
+          <div class="ly-name">新曲 coming soon...</div>
+          <div class="ly-toggle" aria-hidden="true"></div>
+        </div>
+
+        <div class="ly-panel" aria-hidden="true">
+          <div class="ly-lyrics">
+            <!-- ▼▼▼ ここに「この曲の歌詞」を埋め込み▼▼▼ -->
+
+            <!-- ▲▲ 歌詞 ▲▲▲ -->
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </section>
+
 </div>
 
 <footer>
   © 2026 PATЯIOT. All rights reserved.
 </footer>
+
+<!-- ============================================================
+     追加JS：クリックで開閉（＋/ー切替・ぬるっとアニメ）
+     ============================================================ -->
+<script>
+(() => {
+  const songs = document.querySelectorAll(".ly-song");
+
+  function setPanelHeight(panel, toPx) {
+    panel.style.height = toPx + "px";
+  }
+
+  function openSong(song) {
+    const head = song.querySelector(".ly-head");
+    const panel = song.querySelector(".ly-panel");
+    const inner = panel.firstElementChild;
+
+    song.classList.add("is-open");
+    head.setAttribute("aria-expanded", "true");
+    panel.setAttribute("aria-hidden", "false");
+
+    // 0 -> 実高さ へ
+    const h = inner.scrollHeight;
+    setPanelHeight(panel, h);
+
+    // アニメ後はauto
+    const onEnd = (e) => {
+      if (e.propertyName !== "height") return;
+      panel.style.height = "auto";
+      panel.removeEventListener("transitionend", onEnd);
+    };
+    panel.addEventListener("transitionend", onEnd);
+  }
+
+  function closeSong(song) {
+    const head = song.querySelector(".ly-head");
+    const panel = song.querySelector(".ly-panel");
+    const inner = panel.firstElementChild;
+
+    head.setAttribute("aria-expanded", "false");
+    panel.setAttribute("aria-hidden", "true");
+
+    // auto -> 現在高さ(px) -> 0
+    const h = inner.scrollHeight;
+    panel.style.height = h + "px";
+    panel.offsetHeight; // reflow
+    panel.style.height = "0px";
+
+    song.classList.remove("is-open");
+  }
+
+  function toggleSong(song) {
+    const isOpen = song.classList.contains("is-open");
+    if (isOpen) closeSong(song);
+    else openSong(song);
+  }
+
+  songs.forEach(song => {
+    const head = song.querySelector(".ly-head");
+
+    head.addEventListener("click", () => toggleSong(song));
+    head.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        toggleSong(song);
+      }
+    });
+  });
+
+  // 画面幅変更で開いてるパネル高さを再計算（文字折返し対策）
+  window.addEventListener("resize", () => {
+    document.querySelectorAll(".ly-song.is-open .ly-panel").forEach(panel => {
+      const inner = panel.firstElementChild;
+      panel.style.height = "auto";
+      const h = inner.scrollHeight;
+      panel.style.height = h + "px";
+      requestAnimationFrame(() => panel.style.height = "auto");
+    });
+  });
+})();
+</script>
 
 </body>
 </html>
