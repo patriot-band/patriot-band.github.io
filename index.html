@@ -161,6 +161,127 @@
       margin-top: 40px;
     }
 
+/*スケジュール-------------------*/
+    .sched { margin-bottom: 40px; }
+
+    .sched-tabs{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin: 18px 0 18px;
+    }
+
+    .sched-tab{
+      appearance:none;
+      border:1px solid rgba(255,255,255,.22);
+      background: rgba(0,0,0,.35);
+      color:#fff;
+      padding:10px 14px;
+      border-radius: 999px;
+      font-size: 12px;
+      letter-spacing: .08em;
+      cursor:pointer;
+      transition: transform .18s ease, background .18s ease, border-color .18s ease, opacity .18s ease;
+      opacity:.85;
+    }
+    .sched-tab:hover{ transform: translateY(-1px); opacity:1; }
+    .sched-tab.is-active{
+      background: rgba(255,255,255,.08);
+      border-color: rgba(255,255,255,.45);
+      opacity:1;
+    }
+
+    .sched-month{
+      border-top: 1px solid rgba(255,255,255,.18);
+      padding-top: 16px;
+    }
+
+    .sched-monthHead{
+      display:flex;
+      align-items:baseline;
+      justify-content:space-between;
+      gap:16px;
+      margin-bottom: 10px;
+    }
+
+    .sched-monthTitle{
+      font-size: 18px;
+      letter-spacing:.12em;
+      opacity:.95;
+    }
+
+    .sched-monthNav{
+      display:flex;
+      gap:14px;
+      font-size: 12px;
+      opacity:.75;
+    }
+
+    /* button版 */
+    .sched-monthLink{
+      appearance:none;
+      border:none;
+      background:transparent;
+      color:#fff;
+      cursor:pointer;
+      padding:0;
+      font: inherit;
+      border-bottom: 1px solid rgba(255,255,255,.25);
+    }
+    .sched-monthLink:hover{ opacity:1; border-bottom-color: rgba(255,255,255,.6); }
+
+    .sched-list{
+      list-style:none;
+      padding:0;
+      margin:0;
+      border-top: 1px solid rgba(255,255,255,.18);
+    }
+
+    .sched-item{
+      display:grid;
+      grid-template-columns: 110px 140px 1fr;
+      gap: 12px;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(255,255,255,.18);
+    }
+
+    .sched-date{ display:flex; align-items:baseline; gap:8px; }
+    .sched-mmdd{ font-size: 16px; letter-spacing:.08em; }
+    .sched-dow{ font-size: 12px; opacity:.75; }
+
+    .sched-meta{ display:flex; align-items:center; gap:10px; white-space:nowrap; }
+    .sched-badge{
+      display:inline-flex;
+      align-items:center;
+      border:1px solid rgba(255,255,255,.35);
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      letter-spacing:.08em;
+      opacity:.95;
+    }
+    .sched-loc{ font-size: 12px; opacity:.75; }
+
+    .sched-title{
+      color:#fff;
+      text-decoration:none;
+      opacity:.92;
+      line-height: 1.5;
+    }
+    .sched-title:hover{
+      opacity:1;
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+
+    .sched-item.is-hidden{ display:none; }
+
+    @media (max-width: 560px){
+      .sched-item{ grid-template-columns: 1fr; gap: 8px; }
+      .sched-meta{ order:2; }
+      .sched-title{ order:3; }
+    }
+
     /* ============================================================
        ここから追加：Lyrics（曲名クリックで＋/ー＆歌詞ぬるっと）
        ============================================================ */
@@ -284,6 +405,37 @@
   <section class="news">
     <h2>最新情報</h2>
     <p>2025.10.02 — 初のシングル「金魚は水槽の中」配信決定!</p>
+  </section>
+
+  <!-- ============================================================
+       追加セクション：Schedule（ここに一覧を表示）
+       ============================================================ -->
+  <section class="sched">
+    <h2>Schedule</h2>
+
+    <div class="sched-tabs" role="tablist" aria-label="Schedule filter">
+      <button class="sched-tab is-active" data-filter="ALL" role="tab" aria-selected="true">ALL</button>
+      <button class="sched-tab" data-filter="LIVE" role="tab" aria-selected="false">LIVE</button>
+      <button class="sched-tab" data-filter="EVENT" role="tab" aria-selected="false">EVENT</button>
+      <button class="sched-tab" data-filter="TV" role="tab" aria-selected="false">TV</button>
+      <button class="sched-tab" data-filter="RADIO" role="tab" aria-selected="false">RADIO</button>
+      <button class="sched-tab" data-filter="MAGAZINE" role="tab" aria-selected="false">MAGAZINE</button>
+      <button class="sched-tab" data-filter="WEB" role="tab" aria-selected="false">WEB</button>
+      <button class="sched-tab" data-filter="OTHER" role="tab" aria-selected="false">OTHER</button>
+    </div>
+
+    <div class="sched-month">
+      <div class="sched-monthHead">
+        <div class="sched-monthTitle" id="schedMonthTitle">-- ----</div>
+
+        <div class="sched-monthNav">
+          <button class="sched-monthLink" id="schedPrev" type="button">LAST MONTH</button>
+          <button class="sched-monthLink" id="schedNext" type="button">NEXT MONTH</button>
+        </div>
+      </div>
+
+      <ul class="sched-list" id="schedList"></ul>
+    </div>
   </section>
 
   <section class="media">
@@ -461,6 +613,7 @@
           </div>
         </div>
       </section>
+
       <!-- ===== 曲 4 ===== -->
       <section class="ly-song">
         <div class="ly-head" role="button" tabindex="0" aria-expanded="false">
@@ -669,7 +822,7 @@ Hurrah, hurrah, you’re alright.
       <!-- ===== 曲 9 ===== -->
       <section class="ly-song">
         <div class="ly-head" role="button" tabindex="0" aria-expanded="false">
-          <div class="ly-name">新曲 coming soon...</div>
+          <div class="ly-name"></div>
           <div class="ly-toggle" aria-hidden="true"></div>
         </div>
 
@@ -690,6 +843,164 @@ Hurrah, hurrah, you’re alright.
 <footer>
   © 2026 PATЯIOT. All rights reserved.
 </footer>
+
+<!-- ============================================================
+     追加JS：Schedule（月送り + 日付順 + タブ絞り込み）
+     ============================================================ -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  // ============================================================
+  // ここに予定を追加してください（この配列が“マスター”です）
+  // date は YYYY-MM-DD（ゼッタイこの形式）
+  // type は タブと合わせる（LIVE/EVENT/TV/RADIO/MAGAZINE/WEB/OTHER）
+  // url は不要なら "" でOK
+  // ============================================================
+  const EVENTS = [
+    // 例（必要に応じて編集・追加）
+    { date: "2025-04-06", dow: "SUN", type: "LIVE",  loc: "〖大分〗",   title: "初ライブ！ THE SECOND REBELLIOUS・Pankye Rukc・PATЯIOT", url: "https://sub-oita-tops.ssl-lolipop.jp/schedule/clubspot/detail/?detailId=3646&yearmonth=202504" },
+    { date: "2025-05-10", dow: "SAT", type: "LIVE",  loc: "〖大分〗",   title: "乗るしかない、このビッツホールに",     url: "https://t.livepocket.jp/e/kv7e1" },
+    { date: "2025-06-08", dow: "SUN", type: "LIVE",  loc: "〖大分〗",   title: "PATЯIOT・ことりの唄・アリアドネ",     url: "https://sub-oita-tops.ssl-lolipop.jp/schedule/clubspot/detail/?detailId=3686&yearmonth=202506" },
+    { date: "2025-08-10", dow: "SUN", type: "LIVE",  loc: "〖大分〗",   title: "学生ライブYOUNG BLOOD",              url: "" },
+    { date: "2025-09-28", dow: "SUN", type: "LIVE",  loc: "〖大分〗",   title: "アイリス・熱帯魚とものくろーむ・PATЯIOT",     url: "https://sub-oita-tops.ssl-lolipop.jp/schedule/clubspot/detail/?detailId=3737&yearmonth=202509" },
+    { date: "2025-10-13", dow: "MON", type: "RADIO", loc: "〖大分〗",   title: "Oita Sunset Groove 17:43~",              url: "" },
+    { date: "2025-11-02", dow: "SUN", type: "LIVE",  loc: "〖大分〗",   title: "エフエム大分pre. GREAT YOUNG BLOOD",     url: "" },
+    { date: "2025-12-13", dow: "SAT", type: "LIVE",  loc: "〖大分〗",   title: "ODD FIVE -THE LAST TOUR- 「帰帰帰帰」",     url: "https://sub-oita-tops.ssl-lolipop.jp/schedule/clubspot/detail/?detailId=3771&yearmonth=202512" },
+    { date: "2025-08-10", dow: "FRI", type: "LIVE",  loc: "〖大分〗",   title: "大分！超！超！超！学生ライブ！！！2025",              url: "" }
+    // 例：別月
+    // { date: "2026-02-05", dow: "THU", type: "LIVE", loc: "〖福岡〗", title: "（タイトル）", url: "https://..." },
+  ];
+
+  const monthTitleEl = document.getElementById("schedMonthTitle");
+  const listEl = document.getElementById("schedList");
+  const prevBtn = document.getElementById("schedPrev");
+  const nextBtn = document.getElementById("schedNext");
+  const tabs = document.querySelectorAll(".sched-tab");
+
+  if (!monthTitleEl || !listEl || !prevBtn || !nextBtn) {
+    console.error("Schedule: 必要な要素IDが見つかりません（schedMonthTitle/schedList/schedPrev/schedNext）");
+    return;
+  }
+
+  let activeFilter = "ALL";
+
+  function pad2(n){ return String(n).padStart(2, "0"); }
+  function monthLabel(y, m){ return `${pad2(m)} ${y}`; }
+
+  function currentMonth() {
+    const now = new Date();
+    return { y: now.getFullYear(), m: now.getMonth() + 1 };
+  }
+  
+  let current = currentMonth(); // {y, m} mは1-12
+
+  function incMonth({y, m}, delta){
+    let yy = y;
+    let mm = m + delta;
+    while (mm <= 0) { mm += 12; yy -= 1; }
+    while (mm >= 13){ mm -= 12; yy += 1; }
+    return { y: yy, m: mm };
+  }
+
+  function inMonth(ev, y, m){
+    const [yy, mm] = ev.date.split("-").map(Number);
+    return yy === y && mm === m;
+  }
+
+  function buildItem(ev){
+    const parts = ev.date.split("-");
+    const m = parts[1];
+    const d = parts[2];
+
+    const li = document.createElement("li");
+    li.className = "sched-item";
+    li.dataset.type = ev.type || "OTHER";
+    li.dataset.date = ev.date;
+
+    li.innerHTML = `
+      <div class="sched-date">
+        <span class="sched-mmdd">${m} ${d}</span>
+        <span class="sched-dow">[${ev.dow || ""}]</span>
+      </div>
+      <div class="sched-meta">
+        <span class="sched-badge">${ev.type || "OTHER"}</span>
+        <span class="sched-loc">${ev.loc || ""}</span>
+      </div>
+      ${
+        ev.url
+          ? `<a class="sched-title" href="${ev.url}" target="_blank" rel="noopener">${ev.title}</a>`
+          : `<span class="sched-title">${ev.title}</span>`
+      }
+    `;
+    return li;
+  }
+
+  function setActiveTab(tab){
+    tabs.forEach(t => {
+      const on = (t === tab);
+      t.classList.toggle("is-active", on);
+      t.setAttribute("aria-selected", on ? "true" : "false");
+    });
+  }
+
+  function applyFilter(){
+    const items = listEl.querySelectorAll(".sched-item");
+    items.forEach(li => {
+      const type = li.dataset.type || "OTHER";
+      const match = (activeFilter === "ALL") || (type === activeFilter);
+      li.classList.toggle("is-hidden", !match);
+    });
+  }
+
+  function render(){
+    monthTitleEl.textContent = monthLabel(current.y, current.m);
+
+    // ★日付順（昇順）でソート
+    const monthEvents = EVENTS
+      .filter(ev => inMonth(ev, current.y, current.m))
+      .sort((a, b) => a.date.localeCompare(b.date));
+
+    listEl.innerHTML = "";
+
+    if (monthEvents.length === 0) {
+      const li = document.createElement("li");
+      li.className = "sched-item";
+      li.dataset.type = "INFO";
+      li.innerHTML = `
+        <div class="sched-date"><span class="sched-mmdd">-- --</span><span class="sched-dow"></span></div>
+        <div class="sched-meta"><span class="sched-badge">INFO</span><span class="sched-loc"></span></div>
+        <span class="sched-title">この月の予定はありません</span>
+      `;
+      listEl.appendChild(li);
+      applyFilter();
+      return;
+    }
+
+    monthEvents.forEach(ev => listEl.appendChild(buildItem(ev)));
+    applyFilter();
+  }
+
+  // タブ
+  tabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+      activeFilter = tab.dataset.filter || "ALL";
+      setActiveTab(tab);
+      applyFilter();
+    });
+  });
+
+  // ★LAST/NEXT MONTH
+  prevBtn.addEventListener("click", () => {
+    current = incMonth(current, -1);
+    render();
+  });
+  nextBtn.addEventListener("click", () => {
+    current = incMonth(current, +1);
+    render();
+  });
+
+  render();
+});
+</script>
 
 <!-- ============================================================
      追加JS：クリックで開閉（＋/ー切替・ぬるっとアニメ）
