@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>PATЯIOT(パトリオット)</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #fff;
+    }
+
+    /* ===== ロゴ フェード演出 ===== */
+    .logo-overlay {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      animation: logoFadeOut 2.5s ease forwards;
+    }
+
+    .logo-overlay img {
+      width: 220px;
+      max-width: 60%;
+    }
+
+    @keyframes logoFadeOut {
+      0% {
+        opacity: 1;
+        transform: scale(1);
+      }
+      60% {
+        opacity: 1;
+        transform: scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(0.9);
+        pointer-events: none;
+      }
+    }
+
+    /* ===== HEADER（左上ロゴ） ===== */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+
+      display: flex;
+      align-items: center;
+      gap: 14px;
+
+      padding: 14px 20px;
+      background: rgba(0, 0, 0, 0.9);
+      backdrop-filter: blur(6px);
+    }
+
+    .site-logo {
+      height: 52px;   /* ← 42px → 52px */
+      width: auto;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+
+    .site-logo:hover {
+      transform: scale(1.05);
+      opacity: 0.9;
+    }
+
+    .site-title {
+      font-size: 1.1em;   /* ← 0.9em → 1.1em */
+      letter-spacing: 2.5px;
+      opacity: 0.85;
+    }
+
+
+    /* ===== SNS ===== */
+    .sns {
+      text-align: center;
+      padding: 15px;
+    }
+
+    .sns-item {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      width: 44px;
+      height: 44px;
+      margin: 0 12px;
+      border-radius: 50%;
+      background: #000;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .sns-item img {
+      width: 22px;
+      height: 22px;
+      object-fit: contain;
+    }
+
+    .sns-item:hover {
+      transform: scale(1.15);
+      background: #222;
+    }
+
+    .sns-item.youtube img {
+      width: 26px;
+      height: 26px;
+    }
+
+    /* ===== MAIN ===== */
+    .container {
+      max-width: 800px;
+      margin: auto;
+      padding: 30px;
+    }
+
+    section {
+      margin-bottom: 40px;
+    }
+
+    h2 {
+      border-bottom: 1px solid #444;
+      padding-bottom: 10px;
+    }
+
+    /* ===== MV サムネ ===== */
+    .mv-thumb {
+      position: relative;
+      display: block;
+      margin-top: 20px;
+    }
+
+    .mv-thumb img {
+      width: 100%;
+      border-radius: 6px;
+    }
+
+    .mv-thumb::after {
+      content: "▶";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 64px;
+      color: white;
+      opacity: 0.85;
+      pointer-events: none;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 0.9em;
+      border-top: 1px solid #444;
+      margin-top: 40px;
+    }
+
+/*スケジュール-------------------*/
+    .sched { margin-bottom: 40px; }
+
+    .sched-tabs{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin: 18px 0 18px;
+    }
+
+    .sched-tab{
+      appearance:none;
+      border:1px solid rgba(255,255,255,.22);
+      background: rgba(0,0,0,.35);
+      color:#fff;
+      padding:10px 14px;
+      border-radius: 999px;
+      font-size: 12px;
+      letter-spacing: .08em;
+      cursor:pointer;
+      transition: transform .18s ease, background .18s ease, border-color .18s ease, opacity .18s ease;
+      opacity:.85;
+    }
+    .sched-tab:hover{ transform: translateY(-1px); opacity:1; }
+    .sched-tab.is-active{
+      background: rgba(255,255,255,.08);
+      border-color: rgba(255,255,255,.45);
+      opacity:1;
+    }
+
+    .sched-month{
+      border-top: 1px solid rgba(255,255,255,.18);
+      padding-top: 16px;
+    }
+
+    .sched-monthHead{
+      display:flex;
+      align-items:baseline;
+      justify-content:space-between;
+      gap:16px;
+      margin-bottom: 10px;
+    }
+
+    .sched-monthTitle{
+      font-size: 18px;
+      letter-spacing:.12em;
+      opacity:.95;
+    }
+
+    .sched-monthNav{
+      display:flex;
+      gap:14px;
+      font-size: 12px;
+      opacity:.75;
+    }
+
+    /* button版 */
+    .sched-monthLink{
+      appearance:none;
+      border:none;
+      background:transparent;
+      color:#fff;
+      cursor:pointer;
+      padding:0;
+      font: inherit;
+      border-bottom: 1px solid rgba(255,255,255,.25);
+    }
+    .sched-monthLink:hover{ opacity:1; border-bottom-color: rgba(255,255,255,.6); }
+
+    .sched-list{
+      list-style:none;
+      padding:0;
+      margin:0;
+      border-top: 1px solid rgba(255,255,255,.18);
+    }
+
+    .sched-item{
+      display:grid;
+      grid-template-columns: 110px 140px 1fr;
+      gap: 12px;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(255,255,255,.18);
+    }
+
+    .sched-date{ display:flex; align-items:baseline; gap:8px; }
+    .sched-mmdd{ font-size: 16px; letter-spacing:.08em; }
+    .sched-dow{ font-size: 12px; opacity:.75; }
+
+    .sched-meta{ display:flex; align-items:center; gap:10px; white-space:nowrap; }
+    .sched-badge{
+      display:inline-flex;
+      align-items:center;
+      border:1px solid rgba(255,255,255,.35);
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      letter-spacing:.08em;
+      opacity:.95;
+    }
+    .sched-loc{ font-size: 12px; opacity:.75; }
+
+    .sched-title{
+      color:#fff;
+      text-decoration:none;
+      opacity:.92;
+      line-height: 1.5;
+    }
+    .sched-title:hover{
+      opacity:1;
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+
+    .sched-item.is-hidden{ display:none; }
+
+    @media (max-width: 560px){
+      .sched-item{ grid-template-columns: 1fr; gap: 8px; }
+      .sched-meta{ order:2; }
+      .sched-title{ order:3; }
+    }
+
+    /* ============================================================
+       ここから追加：Lyrics（曲名クリックで＋/ー＆歌詞ぬるっと）
+       ============================================================ */
+
+    :root{
+      --ly-border: rgba(255,255,255,.25);
+      --ly-muted: rgba(255,255,255,.72);
+      --ly-ease: cubic-bezier(.16,1,.3,1);
+      --ly-dur: 520ms;
+    }
+
+    .ly-wrap{
+      width: 100%;
+      max-width: 800px;
+    }
+
+    .ly-song{
+      border-top: 1px solid var(--ly-border);
+      padding: 16px 0;
+    }
+    .ly-song:last-child{
+      border-bottom: 1px solid var(--ly-border);
+    }
+
+    .ly-head{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      cursor:pointer;
+      user-select:none;
+    }
+
+    .ly-name{
+      font-size:22px;
+      line-height:1.2;
+      white-space:nowrap;
+    }
+
+    /* ＋／ー */
+    .ly-toggle{
+      width:1em;
+      text-align:center;
+      font-size:20px;
+      opacity:0;
+      transform:translateX(-6px);
+      transition: opacity .25s ease, transform .25s ease;
+    }
+    .ly-toggle::after{ content:"＋"; }
+
+    .ly-song:hover .ly-toggle,
+    .ly-song.is-open .ly-toggle{
+      opacity:1;
+      transform:translateX(0);
+    }
+    .ly-song.is-open .ly-toggle::after{ content:"ー"; }
+
+    /* 歌詞アニメ領域 */
+    .ly-panel{
+      height:0;
+      overflow:hidden;
+      transition: height var(--ly-dur) var(--ly-ease);
+      will-change: height;
+    }
+
+    .ly-lyrics{
+      margin-top:10px;
+      color:var(--ly-muted);
+      font-size:14px;
+      line-height:1.9;
+      white-space:pre-wrap;
+
+      opacity:0;
+      transform: translateY(-6px);
+      filter: blur(2px);
+      transition:
+        opacity 260ms ease,
+        transform var(--ly-dur) var(--ly-ease),
+        filter var(--ly-dur) ease;
+    }
+
+    .ly-song.is-open .ly-lyrics{
+      opacity:1;
+      transform: translateY(0);
+      filter: blur(0);
+    }
+
+    /* ============================
+    Mobile / Responsive tuning
+   ============================ */
+
+    /* まずは全体の文字を少し読みやすく */
+    body{
+      -webkit-text-size-adjust: 100%;
+    }
+
+    /* スマホは余白を減らし、横溢れ防止 */
+    @media (max-width: 560px){
+
+      .container{
+        padding: 18px;       /* 30px → 18px */
+      }
+
+    section{
+      margin-bottom: 28px; /* 40px → 28px */
+    }
+
+    h2{
+      font-size: 18px;
+      padding-bottom: 8px;
+    }
+
+    /* ヘッダー：横幅が狭いので詰める */
+    .site-header{
+      padding: 10px 12px;
+      gap: 10px;
+    }
+
+    .site-logo{
+      height: 42px;        /* 52px → 42px */
+    }
+
+    .site-title{
+      font-size: 0.95em;   /* 少し小さく */
+      letter-spacing: 1.5px;
+      line-height: 1.2;
+    }
+
+    /* SNS：押しやすくしつつ横幅に収める */
+    .sns{
+      padding: 12px;
+    }
+    .sns-item{
+      width: 42px;
+      height: 42px;
+      margin: 0 8px;
+    }
+
+    /* MVサムネの再生アイコン少し小さく */
+    .mv-thumb::after{
+      font-size: 52px; /* 64px → 52px */
+    }
+
+    /* Schedule：タブは小さめ＆2〜3列で見やすく */
+    .sched-tabs{
+      gap: 8px;
+    }
+    .sched-tab{
+      padding: 9px 12px;
+      font-size: 11px;
+    }
+
+    /* 月タイトル・ナビ：改行しても崩れないように */
+    .sched-monthHead{
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .sched-monthNav{
+      gap: 16px;
+    }
+
+    /* Schedule本体：あなたの既存 @media でも1列化してるけど、
+       “日付/種別/場所”の表示を詰めて見やすくする */
+    .sched-mmdd{
+      font-size: 15px;
+    }
+    .sched-dow{
+      font-size: 12px;
+    }
+    .sched-meta{
+      white-space: normal; /* 1行固定を解除（スマホで折り返しOK） */
+      flex-wrap: wrap;
+      row-gap: 6px;
+    }
+    .sched-loc{
+      font-size: 12px;
+    }
+    .sched-title{
+      font-size: 14px;
+    }
+
+    /* Lyrics：曲名がはみ出やすいので折り返し許可 */
+    .ly-head{
+      align-items: flex-start;
+    }
+    .ly-name{
+     font-size: 18px;      /* 22px → 18px */
+      white-space: normal;  /* nowrap解除 */
+    }
+    .ly-toggle{
+      opacity: 1;           /* スマホはhoverが無いので常時見える方が分かりやすい */
+      transform: translateX(0);
+      margin-left: auto;    /* 右寄せ */
+    }
+
+    .ly-lyrics{
+      font-size: 13px;
+      line-height: 1.85;
+    }
+
+    footer{
+      padding: 18px 10px;
+    }
+  }
+
+  /* もう少し大きいスマホ〜タブレットの中間（任意） */
+  @media (min-width: 561px) and (max-width: 820px){
+    .container{ padding: 22px; }
+    .site-logo{ height: 46px; }
+  }
+
+  </style>
+</head>
+
+<body>
+
+<!-- フェード用ロゴ -->
+<div class="logo-overlay">
+  <img src="logo_W.png" alt="PATЯIOT Logo">
+</div>
+
+<!-- ヘッダー -->
+<header class="site-header">
+  <img src="logo_W.png" alt="PATЯIOT Logo" class="site-logo">
+  <div class="site-title">PATЯIOT Official Site</div>
+</header>
+
+<!-- SNS -->
+<nav class="sns">
+  <h2>各種SNS</h2>
+
+  <a href="https://x.com/patriot_oita" target="_blank" class="sns-item">
+    <img src="x_logo_W.png" alt="X">
+  </a>
+
+  <a href="https://www.instagram.com/patriot.band.oita/" target="_blank" class="sns-item">
+    <img src="instagram_logo.png" alt="Instagram">
+  </a>
+
+  <a href="https://www.youtube.com/@official_patriot" target="_blank" class="sns-item youtube">
+    <img src="youtube_logo.png" alt="YouTube">
+  </a>
+</nav>
+
+<div class="container">
+
+  <section class="news">
+    <h2>最新情報</h2>
+    <p>2025.10.02 — 初のシングル「金魚は水槽の中」配信決定!</p>
+  </section>
+
+  <!-- ============================================================
+       追加セクション：Schedule（ここに一覧を表示）
+       ============================================================ -->
+  <section class="sched">
+    <h2>Schedule</h2>
+
+    <div class="sched-tabs" role="tablist" aria-label="Schedule filter">
+      <button class="sched-tab is-active" data-filter="ALL" role="tab" aria-selected="true">ALL</button>
+      <button class="sched-tab" data-filter="LIVE" role="tab" aria-selected="false">LIVE</button>
+      <button class="sched-tab" data-filter="EVENT" role="tab" aria-selected="false">EVENT</button>
+      <button class="sched-tab" data-filter="TV" role="tab" aria-selected="false">TV</button>
+      <button class="sched-tab" data-filter="RADIO" role="tab" aria-selected="false">RADIO</button>
+      <button class="sched-tab" data-filter="MAGAZINE" role="tab" aria-selected="false">MAGAZINE</button>
+      <button class="sched-tab" data-filter="WEB" role="tab" aria-selected="false">WEB</button>
+      <button class="sched-tab" data-filter="OTHER" role="tab" aria-selected="false">OTHER</button>
+    </div>
+
+    <div class="sched-month">
+      <div class="sched-monthHead">
+        <div class="sched-monthTitle" id="schedMonthTitle">-- ----</div>
+
+        <div class="sched-monthNav">
+          <button class="sched-monthLink" id="schedPrev" type="button">LAST MONTH</button>
+          <button class="sched-monthLink" id="schedNext" type="button">NEXT MONTH</button>
+        </div>
+      </div>
+
+      <ul class="sched-list" id="schedList"></ul>
+    </div>
+  </section>
+
+  <section class="media">
+    <h2>MV / Stream</h2>
+
+    <a
+      class="mv-thumb"
+      href="https://www.youtube.com/watch?v=35rpMMmHRgg"
+      target="_blank">
+      <img src="金魚_サムネ.jpg" alt="MV Thumbnail">
+    </a>
+
+  </section>
+
+  <!-- ============================================================
+       追加セクション：Lyrics（ここに曲を並べる）
+       ============================================================ -->
+  <section class="lyrics">
+    <h2>Lyrics</h2>
+
+    <div class="ly-wrap">
+
+      <!-- ===== 曲 1 ===== -->
+      <section class="ly-song">
+        <div class="ly-head" role="button" tabindex="0" aria-expanded="false">
+          <div class="ly-name">金魚は水槽の中</div>
+          <div class="ly-toggle" aria-hidden="true"></div>
+        </div>
+
+        <div class="ly-panel" aria-hidden="true">
+          <div class="ly-lyrics">
+            <!-- ▼▼▼ ここに「この曲の歌詞」を埋め込み▼▼▼ -->
+昨日迄止んでた雨に気が付いて
+溺れた果てにはあなたに似た声
+瞳にも写真にも笑顔だけが映り
+水の流れがただ消えないように
+
+昨日迄止んでた風に気が付いて
+短くなった髪を吹いては撫でて
+金魚は荒れ狂うひどい波の中で
+私の想いの中を描きゆくように
+
+勘違いすれ違いこの先もきっと
+
+誰にも知られずただ息している
+私あなたの海を泳ぎ続けている
+今夜また一人で飛沫をあげずに
+優しくて静かなねむりに堕ちる
+
+どうして知らず知らずのうちに
+綺麗な涙が出てくるのでしょう
+知って欲しいのはあなただけで
+そばにいて良いのもあなただけ
+
+誰にも知られずただ恋している
+私あなたと海にて泳ぎ続けたい
+水面が透けれど一途が邪魔して
+淀みに溶けるのはケムリの世界
+
+勘違いすれ違いこの先もずっと
+
+誰にも知られずただ泣いている
+
+誰にも知られずただ愛している
+私あなたの海を潜り続けている
+電話が鳴らずとも震えたままで
+流されてもなお声が聞きたくて
+今夜もまた金魚はあなたの中に
+溺れて呼吸を乱された水槽の中
+            <!-- ▲▲▲ ここまでが1曲分の歌詞 ▲▲▲ -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== 曲 2 ===== -->
+      <section class="ly-song">
+        <div class="ly-head" role="button" tabindex="0" aria-expanded="false">
+          <div class="ly-name">Wonderland</div>
+          <div class="ly-toggle" aria-hidden="true"></div>
+        </div>
+
+        <div class="ly-panel" aria-hidden="true">
+          <div class="ly-lyrics">
+            <!-- ▼▼▼ 歌詞を埋め込み（改行OK） ▼▼▼ -->
+オレンジ色の陽射し浴びて
+眼の色を変えて何を思う
+悔し涙流して何を見た
+全てはこの日のため
+これからの行く手を遮る
+雑音躱して Jump
+ワンダーランドは止まらない
+まだ何も始まってない
+サーチライトが突き刺して
+僕は誰にでも成れる
+
+夕闇を追いかけて雨を背に受けて
+星に願ったのも
+眠りに飽きるほど話したのも
+全てはこの日のため
+昔から周りに蔓延る
+噂を蹴り上げ Shout
+ワンダーランドは止まらない
+まだ何も変わってない
+テールランプを掻き消して
+僕はどんな色にも染まる
+ワンダーランドは止まらない
+まだ何も得ていない
+真っ直ぐに手を伸ばして
+声が枯れてもなお叫ぶ
+ワンダーランドは終わらない
+その目は濁らない
+静寂を貫いて
+ここから僕らの番だ
+            <!-- ▲▲▲ ここまで ▲▲▲ -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== 曲 3 ===== -->
+      <section class="ly-song">
+        <div class="ly-head" role="button" tabindex="0" aria-expanded="false">
+          <div class="ly-name">Hunter</div>
+          <div class="ly-toggle" aria-hidden="true"></div>
+        </div>
+
+        <div class="ly-panel" aria-hidden="true">
+          <div class="ly-lyrics">
+            <!-- ▼▼▼ ここに「この曲の歌詞」を埋め込み▼▼▼ -->
+何を考えているの
+言われ慣れ聞き飽きた
+彷徨う独りぼっちは今日も
+声を荒げたがる
+
+いつもの事ねと
+苦笑いし続けて
+消えるように逃げる
+なぜあなたはいつも目を逸らすの
+
+別に嫌われたいわけじゃなくて
+私がちょっと変わっているだけ
+ブレない視線はあなたに向き続ける
+月の見えない夜でも
+妖しく光って
+
+静かな街にもやっと
+暮らし慣れ住み飽きた
+ここで独りぼっちは今日も
+群衆達を羨む
+
+いつもの事かと
+嘲笑ってやりたいのに
+まだ力がない
+なぜあなたは遠くで見つめんの
+
+別に共感が欲しいわけじゃなくて
+色んな人と出会いたいだけ
+期待の視線が私に向き続ける
+先の見えない今でも
+
+今日も私はあなたを探す
+出会ってくれるあなたを探す
+音を聞いてくれるあなたを探す
+暗闇の中目を光らせるHunter
+
+別に嫌われたいわけじゃなくて
+逆に嫌わないで欲しいだけ
+ブレない視線はあなたに向き続ける
+ステージの上の私から
+悦に浸るため見せつけたいと思う
+私がちょっと変わっているだけ
+あなたと目を合わせた時初めて
+強いシンパを感じたいから
+幻想を止めない
+            <!-- ▲▲ 歌詞 ▲▲▲ -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== 曲 4 ===== -->
+      <section class="ly-song">
+        <div class="ly-head" role="button" tabindex="0" aria-expanded="false">
+          <div class="ly-name">Supernova</div>
+          <div class="ly-toggle" aria-hidden="true"></div>
+        </div>
+
+        <div class="ly-panel" aria-hidden="true">
+          <div class="ly-lyrics">
+            <!-- ▼▼▼ ここに「この曲の歌詞」を埋め込み▼▼▼ -->
+あの人はこの歌でどう思うのだろうか
+前を向き息を合わせせーので走り出す
+雷に撃たれても傷を隠そうとはせずに
+どんな逆境も突っ跳ね返す吹けや雨嵐
+
+美しい花のように枯れず大輪咲かせて
+雄々しい鳥のように羽を空に広げ翔ぶ
+生まれ変わる魔物を誰も止められない
+
+酸いも甘いも噛み締めた者に敵はない
+周りを見れば拳あげる味方がいるだけ
+斜陽目を焼けどスピードは落とさずに
+流行りの色を塗り変えていく轟け雨嵐
+
+凛々しい風のように濡れた頬乾かして
+麗しい月のように翳りを見せずに輝く
+踊り歌うこの世界を誰も止められない
+
+誰かの声と我らの声がこだましてゆく
+貴方の声も歓喜の声をも止められない
+
+新しい星のようにここから動き出して
+眩しい光のように闇を燦々と照らして
+鳴り響く開幕の合図誰も止められない
+            <!-- ▲▲ 歌詞 ▲▲▲ -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== 曲 5 ===== -->
+      <section class="ly-song">
+        <div class="ly-head" role="button" tabindex="0" aria-expanded="false">
+          <div class="ly-name">123</div>
+          <div class="ly-toggle" aria-hidden="true"></div>
+        </div>
+
+        <div class="ly-panel" aria-hidden="true">
+          <div class="ly-lyrics">
+            <!-- ▼▼▼ ここに「この曲の歌詞」を埋め込み▼▼▼ -->
+ワン・ツー・スリーで解けるような
+そんなに簡単な問題じゃないんだぜ
+ちょっとだけ回り道をしたとしても
+いいのかいいいんじゃないいいのさ
+
+無人の駅にて列車を待っていたこと
+飛び乗って窮屈に揺られていたこと
+あの改札前あなたがいなかったこと
+それを残念がりブルーになったこと
+
+何か足りない思い出はみすぼらしく
+今日もまた探し回る時間がまだある
+
+偶然隣に座ってきた見知らぬ人さえ
+何かを考えて暮らしているのだろう
+
+ワン・ツー・スリーで恋するような
+そんなシンプルな青春はないんだぜ
+ちょっとだけこの命を懸けてみても
+いいのかいいいんじゃないいいのさ
+
+何かが足りない思い出も翳り始める
+今日は既に探し回る時間がもうない
+
+いっせーのーでその身を投げ打って
+終われるような人生じゃないんだぜ
+身体中に青を満たしていけばいいさ
+全て全て行けんのかい出来んのかい
+
+ワン・ツー・スリーで次のどこかへ
+ワンダーランドは終わらないんだぜ
+ちょっとだけ回り道をしたとしても
+いいのかいいいんじゃないいいのさ
+            <!-- ▲▲ 歌詞 ▲▲▲ -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== 曲 6 ===== -->
+      <section class="ly-song">
+        <div class="ly-head" role="button" tabindex="0" aria-expanded="false">
+          <div class="ly-name">YOROI</div>
+          <div class="ly-toggle" aria-hidden="true"></div>
+        </div>
+
+        <div class="ly-panel" aria-hidden="true">
+          <div class="ly-lyrics">
+            <!-- ▼▼▼ ここに「この曲の歌詞」を埋め込み▼▼▼ -->
+何でもできるような気がした遠い春
+一体どこで道を踏み外したのだろう
+何にも怯むものはなかった赤い夕陽
+その日から心の中の何かが変わった
+
+化けの皮を被った鎧を纏うこの身に
+剣を刺す者など誰一人としていない
+
+あの角を曲がればそこは行き止まり
+染まった素手を引き摺られて終わり
+叶わないうつつを夢見ているばかり
+余所見をしていたらすぐ泥濘に嵌り
+
+縋る気は全くないというのに今更さ
+
+恩恵を着飾った呪いを孕むこの手を
+握り返す者など誰一人としていない
+
+どんなに足掻いても答えは出ている
+
+栄光を失った憂いに満ちたこの眼に
+癒しを与える者はどこの誰か教えて
+化けの皮を被った鎧を纏うこの身を
+強く抱く者など誰一人としていない
+己を抱きしめるそんな者などいない
+            <!-- ▲▲ 歌詞 ▲▲▲ -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== 曲 7 ===== -->
+      <section class="ly-song">
+        <div class="ly-head" role="button" tabindex="0" aria-expanded="false">
+          <div class="ly-name">秒針と満月と鏡</div>
+          <div class="ly-toggle" aria-hidden="true"></div>
+        </div>
+
+        <div class="ly-panel" aria-hidden="true">
+          <div class="ly-lyrics">
+            <!-- ▼▼▼ ここに「この曲の歌詞」を埋め込み▼▼▼ -->
+昨日言っていた言葉は嘘なの
+僕を眺めるのはお空の白い月
+うずくまった横顔を見ている
+
+あなたが笑っていた夜でした
+僕の思い上がりが邪魔をして
+スピードが一人早かったから
+時計の秒針はまだ重ならない
+
+明日は遠く知らぬ街へ行こう
+
+あなたが黙っていた朝でした
+要らない優しさが邪魔をして
+まるで二人が鏡に映ったまま
+あなたのことをまだ知らない
+
+自分を貶しながら他人を妬む
+夢を見過ぎた僕の負けですね
+
+明るくて暗すぎる日々でした
+ただ出会い別れが邪魔をして
+哀しい思いは一人歩き続ける
+思い出せない程の時間でした
+二人はいつまでも凍えている
+忘れられない程の瞬間でした
+外は雨が降っていたみたいね
+
+この前言った言葉は本当なの
+            <!-- ▲▲ 歌詞 ▲▲▲ -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== 曲 8 ===== -->
+      <section class="ly-song">
+        <div class="ly-head" role="button" tabindex="0" aria-expanded="false">
+          <div class="ly-name">HERO ON STAGE</div>
+          <div class="ly-toggle" aria-hidden="true"></div>
+        </div>
+
+        <div class="ly-panel" aria-hidden="true">
+          <div class="ly-lyrics">
+            <!-- ▼▼▼ ここに「この曲の歌詞」を埋め込み▼▼▼ -->
+ヒーローが歌う姿を遠く見つめたあの日
+あなた以外誰しもが見向きもしなかった
+思い出は光に照らされなぜか悔しくなる
+
+今日は雨に濡れるから傘をさして帰ろう
+いつか目覚めた衝動をずっと忘れないで
+Hurrah, hurrah, you’re alright.
+
+僕が僕で居られる場所聞こえた歓声の渦
+
+今日は涙を見せないで傘をさして帰ろう
+心を揺さぶった感動をずっと忘れないで
+Hurrah,hurrah, you’re alright.
+
+今日は全て曝け出して傘もささず帰ろう
+舞台から眺める風景をずっと忘れないで
+人が人で居られる時間止まない歓声の渦
+Hurrah, hurrah, you’re alright.
+            <!-- ▲▲ 歌詞 ▲▲▲ -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== 曲 9 ===== -->
+      <section class="ly-song">
+        <div class="ly-head" role="button" tabindex="0" aria-expanded="false">
+          <div class="ly-name"></div>
+          <div class="ly-toggle" aria-hidden="true"></div>
+        </div>
+
+        <div class="ly-panel" aria-hidden="true">
+          <div class="ly-lyrics">
+            <!-- ▼▼▼ ここに「この曲の歌詞」を埋め込み▼▼▼ -->
+
+            <!-- ▲▲ 歌詞 ▲▲▲ -->
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  © 2026 PATЯIOT. All rights reserved.
+</footer>
+
+<!-- ============================================================
+     追加JS：Schedule（月送り + 日付順 + タブ絞り込み）
+     ============================================================ -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  // ============================================================
+  // ここに予定を追加してください（この配列が“マスター”です）
+  // date は YYYY-MM-DD（ゼッタイこの形式）
+  // type は タブと合わせる（LIVE/EVENT/TV/RADIO/MAGAZINE/WEB/OTHER）
+  // url は不要なら "" でOK
+  // ============================================================
+  const EVENTS = [
+    // 例（必要に応じて編集・追加）
+    { date: "2025-04-06", dow: "SUN", type: "LIVE",  loc: "〖大分〗",   title: "初ライブ！ THE SECOND REBELLIOUS・Pankye Rukc・PATЯIOT", url: "https://sub-oita-tops.ssl-lolipop.jp/schedule/clubspot/detail/?detailId=3646&yearmonth=202504" },
+    { date: "2025-05-10", dow: "SAT", type: "LIVE",  loc: "〖大分〗",   title: "乗るしかない、このビッツホールに",     url: "https://t.livepocket.jp/e/kv7e1" },
+    { date: "2025-06-08", dow: "SUN", type: "LIVE",  loc: "〖大分〗",   title: "PATЯIOT・ことりの唄・アリアドネ",     url: "https://sub-oita-tops.ssl-lolipop.jp/schedule/clubspot/detail/?detailId=3686&yearmonth=202506" },
+    { date: "2025-08-10", dow: "SUN", type: "LIVE",  loc: "〖大分〗",   title: "学生ライブYOUNG BLOOD",              url: "" },
+    { date: "2025-09-28", dow: "SUN", type: "LIVE",  loc: "〖大分〗",   title: "アイリス・熱帯魚とものくろーむ・PATЯIOT",     url: "https://sub-oita-tops.ssl-lolipop.jp/schedule/clubspot/detail/?detailId=3737&yearmonth=202509" },
+    { date: "2025-10-13", dow: "MON", type: "RADIO", loc: "〖大分〗",   title: "Oita Sunset Groove 17:43~",              url: "" },
+    { date: "2025-11-02", dow: "SUN", type: "LIVE",  loc: "〖大分〗",   title: "エフエム大分pre. GREAT YOUNG BLOOD",     url: "" },
+    { date: "2025-12-13", dow: "SAT", type: "LIVE",  loc: "〖大分〗",   title: "ODD FIVE -THE LAST TOUR- 「帰帰帰帰」",     url: "https://sub-oita-tops.ssl-lolipop.jp/schedule/clubspot/detail/?detailId=3771&yearmonth=202512" },
+    { date: "2025-12-26", dow: "FRI", type: "LIVE",  loc: "〖大分〗",   title: "大分！超！超！超！学生ライブ！！！2025",              url: "" }
+    // 例：別月
+    // { date: "2026-02-05", dow: "THU", type: "LIVE", loc: "〖福岡〗", title: "（タイトル）", url: "https://..." },
+  ];
+
+  const monthTitleEl = document.getElementById("schedMonthTitle");
+  const listEl = document.getElementById("schedList");
+  const prevBtn = document.getElementById("schedPrev");
+  const nextBtn = document.getElementById("schedNext");
+  const tabs = document.querySelectorAll(".sched-tab");
+
+  if (!monthTitleEl || !listEl || !prevBtn || !nextBtn) {
+    console.error("Schedule: 必要な要素IDが見つかりません（schedMonthTitle/schedList/schedPrev/schedNext）");
+    return;
+  }
+
+  let activeFilter = "ALL";
+
+  function pad2(n){ return String(n).padStart(2, "0"); }
+  function monthLabel(y, m){ return `${pad2(m)} ${y}`; }
+
+  function currentMonth() {
+    const now = new Date();
+    return { y: now.getFullYear(), m: now.getMonth() + 1 };
+  }
+  
+  let current = currentMonth(); // {y, m} mは1-12
+
+  function incMonth({y, m}, delta){
+    let yy = y;
+    let mm = m + delta;
+    while (mm <= 0) { mm += 12; yy -= 1; }
+    while (mm >= 13){ mm -= 12; yy += 1; }
+    return { y: yy, m: mm };
+  }
+
+  function inMonth(ev, y, m){
+    const [yy, mm] = ev.date.split("-").map(Number);
+    return yy === y && mm === m;
+  }
+
+  function buildItem(ev){
+    const parts = ev.date.split("-");
+    const m = parts[1];
+    const d = parts[2];
+
+    const li = document.createElement("li");
+    li.className = "sched-item";
+    li.dataset.type = ev.type || "OTHER";
+    li.dataset.date = ev.date;
+
+    li.innerHTML = `
+      <div class="sched-date">
+        <span class="sched-mmdd">${m} ${d}</span>
+        <span class="sched-dow">[${ev.dow || ""}]</span>
+      </div>
+      <div class="sched-meta">
+        <span class="sched-badge">${ev.type || "OTHER"}</span>
+        <span class="sched-loc">${ev.loc || ""}</span>
+      </div>
+      ${
+        ev.url
+          ? `<a class="sched-title" href="${ev.url}" target="_blank" rel="noopener">${ev.title}</a>`
+          : `<span class="sched-title">${ev.title}</span>`
+      }
+    `;
+    return li;
+  }
+
+  function setActiveTab(tab){
+    tabs.forEach(t => {
+      const on = (t === tab);
+      t.classList.toggle("is-active", on);
+      t.setAttribute("aria-selected", on ? "true" : "false");
+    });
+  }
+
+  function applyFilter(){
+    const items = listEl.querySelectorAll(".sched-item");
+    items.forEach(li => {
+      const type = li.dataset.type || "OTHER";
+      const match = (activeFilter === "ALL") || (type === activeFilter);
+      li.classList.toggle("is-hidden", !match);
+    });
+  }
+
+  function render(){
+    monthTitleEl.textContent = monthLabel(current.y, current.m);
+
+    // ★日付順（昇順）でソート
+    const monthEvents = EVENTS
+      .filter(ev => inMonth(ev, current.y, current.m))
+      .sort((a, b) => a.date.localeCompare(b.date));
+
+    listEl.innerHTML = "";
+
+    if (monthEvents.length === 0) {
+      const li = document.createElement("li");
+      li.className = "sched-item";
+      li.dataset.type = "INFO";
+      li.innerHTML = `
+        <div class="sched-date"><span class="sched-mmdd">-- --</span><span class="sched-dow"></span></div>
+        <div class="sched-meta"><span class="sched-badge">INFO</span><span class="sched-loc"></span></div>
+        <span class="sched-title">この月の予定はありません</span>
+      `;
+      listEl.appendChild(li);
+      applyFilter();
+      return;
+    }
+
+    monthEvents.forEach(ev => listEl.appendChild(buildItem(ev)));
+    applyFilter();
+  }
+
+  // タブ
+  tabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+      activeFilter = tab.dataset.filter || "ALL";
+      setActiveTab(tab);
+      applyFilter();
+    });
+  });
+
+  // ★LAST/NEXT MONTH
+  prevBtn.addEventListener("click", () => {
+    current = incMonth(current, -1);
+    render();
+  });
+  nextBtn.addEventListener("click", () => {
+    current = incMonth(current, +1);
+    render();
+  });
+
+  render();
+});
+</script>
+
+<!-- ============================================================
+     追加JS：クリックで開閉（＋/ー切替・ぬるっとアニメ）
+     ============================================================ -->
+<script>
+(() => {
+  const songs = document.querySelectorAll(".ly-song");
+
+  function setPanelHeight(panel, toPx) {
+    panel.style.height = toPx + "px";
+  }
+
+  function openSong(song) {
+    const head = song.querySelector(".ly-head");
+    const panel = song.querySelector(".ly-panel");
+    const inner = panel.firstElementChild;
+
+    song.classList.add("is-open");
+    head.setAttribute("aria-expanded", "true");
+    panel.setAttribute("aria-hidden", "false");
+
+    // 0 -> 実高さ へ
+    const h = inner.scrollHeight;
+    setPanelHeight(panel, h);
+
+    // アニメ後はauto
+    const onEnd = (e) => {
+      if (e.propertyName !== "height") return;
+      panel.style.height = "auto";
+      panel.removeEventListener("transitionend", onEnd);
+    };
+    panel.addEventListener("transitionend", onEnd);
+  }
+
+  function closeSong(song) {
+    const head = song.querySelector(".ly-head");
+    const panel = song.querySelector(".ly-panel");
+    const inner = panel.firstElementChild;
+
+    head.setAttribute("aria-expanded", "false");
+    panel.setAttribute("aria-hidden", "true");
+
+    // auto -> 現在高さ(px) -> 0
+    const h = inner.scrollHeight;
+    panel.style.height = h + "px";
+    panel.offsetHeight; // reflow
+    panel.style.height = "0px";
+
+    song.classList.remove("is-open");
+  }
+
+  function toggleSong(song) {
+    const isOpen = song.classList.contains("is-open");
+    if (isOpen) closeSong(song);
+    else openSong(song);
+  }
+
+  songs.forEach(song => {
+    const head = song.querySelector(".ly-head");
+
+    head.addEventListener("click", () => toggleSong(song));
+    head.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        toggleSong(song);
+      }
+    });
+  });
+
+  // 画面幅変更で開いてるパネル高さを再計算（文字折返し対策）
+  window.addEventListener("resize", () => {
+    document.querySelectorAll(".ly-song.is-open .ly-panel").forEach(panel => {
+      const inner = panel.firstElementChild;
+      panel.style.height = "auto";
+      const h = inner.scrollHeight;
+      panel.style.height = h + "px";
+      requestAnimationFrame(() => panel.style.height = "auto");
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
