@@ -4,7 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  <!-- サイト名（Google用 決定打） -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "PATЯIOT（パトリオット）",
+    "alternateName": "PATЯIOT",
+    "url": "https://patriot-band.github.io/"
+  }
+  </script>
+
+  <!-- 通常のSEO / OGP -->
   <title>PATЯIOT(パトリオット)</title>
+  <meta property="og:site_name" content="PATЯIOT（パトリオット）">
+  <meta property="og:title" content="PATЯIOT（パトリオット）公式サイト">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://patriot-band.github.io/">
 
   <style>
     body {
@@ -495,6 +511,18 @@
     .site-logo{ height: 46px; }
   }
 
+  .visually-hidden{
+    position:absolute;
+    width:1px;
+    height:1px;
+    margin:-1px;
+    overflow:hidden;
+    clip:rect(0 0 0 0);
+    white-space:nowrap;
+    border:0;
+  }
+
+
   </style>
 </head>
 
@@ -507,6 +535,8 @@
 
 <!-- ヘッダー -->
 <header class="site-header">
+  <h1 class="visually-hidden">PATЯIOT（パトリオット）</h1>
+
   <img src="logo_W.png" alt="PATЯIOT Logo" class="site-logo">
   <div class="site-title">PATЯIOT Official Site</div>
 </header>
