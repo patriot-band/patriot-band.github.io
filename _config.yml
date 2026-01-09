@@ -1,2 +1,3 @@
-
 url: "https://patriot-band.github.io"
+# plugins:
+#   - jekyll-sitemap
